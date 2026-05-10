@@ -2,6 +2,8 @@
 
 A Model Context Protocol (MCP) server for LM Studio.
 
+![Sample](mcp-lmstudio.png)
+
 ## Features
 
 - MCP tools for LM Studio integration

@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# _Misc folder
+_Misc/
+
+# LM Studio configuration files
+.user/.lmstudio/*
+!.user/.lmstudio/config.json
+
+# Logs and temp
+*.log
+*.tmp
+temp/
+
+# Testing coverage
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Build outputs
+dist/
+build/

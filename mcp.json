@@ -1,0 +1,41 @@
+{
+  "mcpServers": {
+    "Local Utility MCP": {
+      "command": "D:\\Scripts\\lm-studio-mcp-server\\venv\\Scripts\\python.exe",
+      "args": [
+        "D:\\Scripts\\lm-studio-mcp-server\\mcp_server.py"
+      ],
+      "env": {
+        "PYTHONUNBUFFERED": "1"
+      },
+      "timeout": 180000
+    },
+    "Git MCP": {
+      "command": "D:\\Scripts\\lm-studio-mcp-server\\venv\\Scripts\\python.exe",
+      "args": [
+        "D:\\Scripts\\lm-studio-mcp-server\\git_mcp_server.py"
+      ],
+      "env": {
+        "PYTHONUNBUFFERED": "1"
+      }
+    },
+    "Files Organizer MCP": {
+      "command": "D:\\Scripts\\lm-studio-mcp-server\\venv\\Scripts\\python.exe",
+      "args": [
+        "D:\\Scripts\\lm-studio-mcp-server\\mcp_file_organizer.py"
+      ],
+      "env": {
+        "PYTHONUNBUFFERED": "1"
+      }
+    },
+    "Web Browser MCP": {
+      "command": "D:\\Scripts\\lm-studio-mcp-server\\venv\\Scripts\\python.exe",
+      "args": [
+        "D:\\Scripts\\lm-studio-mcp-server\\mcp_webscraper.py"
+      ],
+      "env": {
+        "PYTHONUNBUFFERED": "1"
+      }
+    }
+  }
+}

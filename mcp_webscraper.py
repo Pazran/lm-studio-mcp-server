@@ -6,7 +6,7 @@ import requests
 from bs4 import BeautifulSoup
 from datetime import datetime, timezone
 
-server = FastMCP("Web Browser MCP Server") # use your existing FastMCP server instance
+server = FastMCP("Web Browser MCP Server") # use existing FastMCP server instance
 SEARX_URL = "http://localhost:8080/search"
 
 # ----------------------------------------------------------

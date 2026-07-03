@@ -1,3 +1,5 @@
+import io
+import sys
 import os
 import subprocess
 #import sqlite3
@@ -787,10 +789,10 @@ def shell(cmd: str) -> str:
         return subprocess.getoutput(cmd)
     except Exception as e:
         return f"Shell error: {e}"
-
+"""
 @server.tool()
 def python_eval(code: str) -> str:
-    """Run single line Python expression."""
+    ""Run single line Python expression.""
     try:
         return str(eval(code))
     except Exception as e:
@@ -798,13 +800,60 @@ def python_eval(code: str) -> str:
 
 @server.tool()
 def python_exec(code: str) -> dict:
-    """Execute a block of Python code."""
+    ""Execute a block of Python code.""
     try:
         local_vars = {}
         exec(code, {}, local_vars)
         return {"result": local_vars}
     except Exception as e:
+        return {"error": str(e)}"""
+
+@server.tool()
+def python_eval(code: str) -> dict:
+    """Run single line Python expression safely."""
+    output_capture = io.StringIO()
+    old_stdout = sys.stdout
+    sys.stdout = output_capture
+    
+    try:
+        result = eval(code)
+        return {
+            "result": str(result),
+            "stdout": output_capture.getvalue()
+        }
+    except Exception as e:
         return {"error": str(e)}
+    finally:
+        sys.stdout = old_stdout
+
+@server.tool()
+def python_exec(code: str) -> dict:
+    """Execute a block of Python code and return captured output and variables."""
+    # Create a buffer to capture stdout
+    output_capture = io.StringIO()
+    old_stdout = sys.stdout
+    sys.stdout = output_capture
+    
+    local_vars = {}
+    try:
+        # Execute the code
+        exec(code, {}, local_vars)
+        
+        # Filter for serializable variables only
+        serializable_vars = {
+            k: v for k, v in local_vars.items() 
+            if isinstance(v, (str, int, float, bool, list, dict, type(None)))
+        }
+        
+        return {
+            "result": serializable_vars,
+            "stdout": output_capture.getvalue()
+        }
+    except Exception as e:
+        return {"error": str(e)}
+    finally:
+        # Restore stdout regardless of success or failure
+        sys.stdout = old_stdout
 
 @server.tool()
 def read_pdf_text(path: str, max_chars: int = 20000) -> str:

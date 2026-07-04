@@ -41,5 +41,5 @@ htmlcov/
 dist/
 build/
 
-memory.json          # Never commit user data
-.env                 # Environment variables
+memory.json
+.env

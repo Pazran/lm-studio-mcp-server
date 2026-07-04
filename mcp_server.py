@@ -19,6 +19,7 @@ from shutil import move
 from datetime import datetime
 from mcp.server.fastmcp import FastMCP
 from typing import Union, List
+from pathlib import Path
 
 # -------------------------------
 # CONFIGURATION
@@ -28,6 +29,18 @@ from typing import Union, List
 
 # Create MCP server
 server = FastMCP("Local Utility MCP Server")
+
+# -------------------------------
+# CONFIGURATION - Relative to Script Location
+# -------------------------------
+from pathlib import Path
+BASE_DIR = Path(__file__).parent.resolve()
+MEMORY_PATH = BASE_DIR / "memory.json"  # Always relative, no env vars needed
+BACKUP_ROOT = BASE_DIR / "backups"      # Optional: for backup operations
+
+def _get_memory_path():
+    """Get memory path - always uses script-relative location."""
+    return MEMORY_PATH
 
 # -------------------------------
 # Internal helpers for file_op
@@ -748,6 +761,7 @@ def universal_router(router: str, action: str, params: dict):
         "data_op": {
             "read_json": _read_json,
             "write_json": _write_json,
+            "write_file": _write_file,
             "read_csv_preview": _read_csv_preview,
             "csv_stats": _read_csv_stats,
             "csv_filter_by_date": _csv_filter_by_date,
@@ -887,7 +901,7 @@ def manage_memory(action: str, topic: Optional[str] = None, summary: Optional[st
     Returns:
         str: A confirmation message or a string representation of the stored lessons.
     """
-    filepath = f"D:\AI_Lab\LLMs\LMStudio_Clara_Memory\memory.json"
+    filepath = _get_memory_path()
     
     # 1. Ensure file exists with a base schema
     if not os.path.exists(filepath):

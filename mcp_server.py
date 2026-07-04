@@ -2,26 +2,21 @@ import io
 import sys
 import os
 import subprocess
-#import sqlite3
 import platform
 import shutil
 import zipfile
 import json
-import hashlib
 import send2trash
-#import tempfile
 import difflib
 import pandas as pd
 import inspect
 import fnmatch
 from pypdf import PdfReader
 from difflib import get_close_matches
-from typing import Dict, Union, List
+from typing import Dict, Union, List, Optional
 from hashlib import sha256
-from pathlib import Path
 from shutil import move
-from dateutil import parser
-from datetime import datetime, timezone
+from datetime import datetime
 from mcp.server.fastmcp import FastMCP
 from typing import Union, List
 
@@ -876,6 +871,53 @@ def read_pdf_text(path: str, max_chars: int = 20000) -> str:
         return content[:max_chars] or "No extractable text found in PDF."
     except Exception as e:
         return f"Error reading PDF: {e}"
+
+# MEMORY MANAGEMENT
+@server.tool()
+def manage_memory(action: str, topic: Optional[str] = None, summary: Optional[str] = None) -> str:
+    """
+    Manages a persistent JSON knowledge base for long-term learning.
+    
+    Args:
+        action (str): Must be either 'list' to retrieve all lessons, 
+                     or 'add' to record a new lesson.
+        topic (str, optional): A short title/category for the lesson. Required for 'add'.
+        summary (str, optional): A concise (max 20 words) explanation of the lesson. Required for 'add'.
+        
+    Returns:
+        str: A confirmation message or a string representation of the stored lessons.
+    """
+    filepath = f"D:\AI_Lab\LLMs\LMStudio_Clara_Memory\memory.json"
+    
+    # 1. Ensure file exists with a base schema
+    if not os.path.exists(filepath):
+        with open(filepath, 'w') as f:
+            json.dump({"lessons": []}, f)
+
+    try:
+        # 2. Read existing data
+        with open(filepath, 'r') as f:
+            data = json.load(f)
+        
+        # 3. Handle 'list' action
+        if action == "list":
+            return json.dumps(data.get("lessons", []), indent=2)
+        
+        # 4. Handle 'add' action
+        elif action == "add":
+            if not topic or not summary:
+                return "Error: 'add' action requires both 'topic' and 'summary'."
+            
+            data["lessons"].append({"topic": topic, "summary": summary})
+            
+            with open(filepath, 'w') as f:
+                json.dump(data, f, indent=2)
+            return f"Successfully saved lesson under topic: {topic}"
+            
+        return "Error: Invalid action. Use 'list' or 'add'."
+        
+    except Exception as e:
+        return f"Error accessing memory file: {str(e)}"
 
 # -------------------------------
 # Run MCP server
